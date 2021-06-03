@@ -1,5 +1,7 @@
 const p1 = 'blue-paddle';
 const p2 = 'red-paddle';
+const paddleHeight = 100;
+const paddleWidth = 10;
 const ball = 'ball';
 const canvas = 'canvas';
 var width = window.innerWidth - 20;
@@ -12,19 +14,19 @@ app.onInit = function(){
     this.nodes.push({
         id : p1,
         x  : 100,
-        y  : 0,
-        width  : 10,
-        height : 100,
+        y  : height / 2  - paddleHeight / 2,
+        width  : paddleWidth,
+        height : paddleHeight,
         color  : 'red',
         direction : 0
     });
 
     this.nodes.push({
         id : p2,
-        x  : 50,
-        y  : 0,
-        width  : 10,
-        height : 100,
+        x  : width - 100,
+        y  : height / 2 - paddleHeight / 2,
+        width  : paddleWidth,
+        height : paddleHeight,
         color  : 'blue',
         direction : 0
     });
