@@ -2,6 +2,7 @@ const p1 = 'blue-paddle';
 const p2 = 'red-paddle';
 const paddleHeight = 100;
 const paddleWidth = 10;
+const playerSpeed = 30;
 const ball = 'ball';
 const canvas = 'canvas';
 var width = window.innerWidth - 20;
@@ -44,19 +45,27 @@ app.onInit = function(){
     document.onkeydown = handleKeys;
     
     function p1UpHandler() {
-        app.getNode(p1).y-=30;
+        var player = app.getNode(p1);
+        if (player.y > 0 || player.y > playerSpeed)
+            player.y-=playerSpeed;
     }
 
     function p1DownHandler() {
-        app.getNode(p1).y+=30;
+        var player = app.getNode(p1);
+        if (player.y + paddleHeight < height || player.y + paddleHeight < height - playerSpeed)
+            player.y+=playerSpeed;
     }
 
     function p2UpHandler() {
-        app.getNode(p2).y-=30;
+        var player = app.getNode(p2);
+        if (player.y > 0 || player.y > playerSpeed)
+            player.y-=playerSpeed;
     }
 
     function p2DownHandler() {
-        app.getNode(p2).y+=30;
+        var player = app.getNode(p2);
+        if (player.y + paddleHeight < height || player.y + paddleHeight < height - playerSpeed)
+            player.y+=playerSpeed;
     }
 
     function startGameHandler() {
