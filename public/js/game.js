@@ -1,12 +1,12 @@
+var width = window.innerWidth - 20;
+var height = window.innerHeight - 20;
 const p1 = 'blue-paddle';
 const p2 = 'red-paddle';
 const paddleHeight = 100;
 const paddleWidth = 10;
-const playerSpeed = 30;
+const playerSpeed = height / 50 + (50 / width);
 const ball = 'ball';
 const canvas = 'canvas';
-var width = window.innerWidth - 20;
-var height = window.innerHeight - 20;
 
 app.onInit = function(){
     document.body.children[canvas].setAttribute('width', width);
@@ -93,4 +93,11 @@ app.onUpdate = function(time){
     context.clearRect(0, 0, canvasObj.width, canvasObj.height);
 
     app.getNode(ball).x+=(app.getNode(ball).direction*5);
+
+    // TODO
+    /*
+     * If ball hits either edge, game over
+     * If ball hits paddle, reverse x direction
+     * If ball hits paddle, do some funky magic with y direction to make it bounce according to where on the paddle
+     */
 };
