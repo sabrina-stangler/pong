@@ -1,5 +1,5 @@
 const width = window.innerWidth - 20;
-const height = window.innerHeight - 20;
+const height = window.innerHeight - 50;
 const p1 = 'blue-paddle';
 const p1X = 100;
 const p2 = 'red-paddle';
@@ -17,9 +17,6 @@ var p2Score = 0;
 app.onInit = function(){
     document.body.children[canvas].setAttribute('width', width);
     document.body.children[canvas].setAttribute('height', height);
-
-    p1Score = 0;
-    p2Score = 0;
 
     this.nodes.push({
         id : p1,
@@ -64,6 +61,9 @@ app.onInit = function(){
         }[ev.code];
         callback?.();
     }
+    
+    p1Score = 0;
+    p2Score = 0;
 };
 
 app.onUpdate = function(time){
@@ -127,14 +127,16 @@ function moveBall() {
 
 function handleScoring() {
     var ballObj = app.getNode(ball);
-    if (ballObj.x < p1X - paddleWidth) {
-        startGameHandler();
-        p2Score++;
-        logScore('P2');
-    } else if (ballObj.x > p2X + paddleWidth) {
-        startGameHandler();
-        p1Score++;
-        logScore('P1');
+    if (ballObj !== null && ballObj.x !== null && ballObj.y !== null) {
+        if (ballObj.x < p1X - paddleWidth) {
+            startGameHandler();
+            p2Score++;
+            logScore('P2');
+        } else if (ballObj.x > p2X + paddleWidth) {
+            startGameHandler();
+            p1Score++;
+            logScore('P1');
+        }
     }
 }
 
@@ -142,6 +144,9 @@ function logScore(lastScorer) {
     console.log('~~ ' + lastScorer + ' just scored! ~~');
     console.log('P1: ' + p1Score);
     console.log('P2: ' + p2Score);
+
+    document.getElementById('p1Score').innerHTML = p1Score;
+    document.getElementById('p2Score').innerHTML = p2Score;
 }
 
 function handlePaddleCollisions() {
