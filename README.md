@@ -1,3 +1,7 @@
+# TLDR
+
+This is a coding test that I received and never ended up doing until now, so here it is, just for funsies.
+
 # Colonist Test Game
 Implement a ping pong game according to the template.
 
