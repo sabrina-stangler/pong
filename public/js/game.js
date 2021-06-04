@@ -136,8 +136,12 @@ function logScore(lastScorer) {
 }
 
 function handleBallCollisions() {
+    var ballObj = app.getNode(ball);
+    var p1Obj = app.getNode(p1);
+    var p2Obj = app.getNode(p2);
+    if (((ballObj.x < (p1Obj.x + paddleWidth)) && (ballObj.y + ballDiameter >= p1Obj.y && ballObj.y <= p1Obj.y + paddleHeight)) || ((ballObj.x > (p2Obj.x - paddleWidth)) && (ballObj.y + ballDiameter >= p2Obj.y && ballObj.y <= p2Obj.y + paddleHeight)))
+        ballObj.direction = ballObj.direction * -1;
     /*
-     * If ball hits paddle, reverse x direction
      * If ball hits paddle, do some funky magic with y direction to make it bounce according to where on the paddle
      */
 }
