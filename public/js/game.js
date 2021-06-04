@@ -4,12 +4,12 @@ const p1 = 'blue-paddle';
 const p1X = 100;
 const p2 = 'red-paddle';
 const p2X = width - 100;
-const paddleHeight = 100;
+const paddleHeight = 200;
 const paddleWidth = 10;
 const playerSpeed = height / 50 + (50 / width);
 const ball = 'ball';
 const ballDiameter = 10;
-const ballSpeed = playerSpeed / 4;
+const ballSpeed = playerSpeed / 5;
 const canvas = 'canvas';
 var p1Score = 0;
 var p2Score = 0;
@@ -48,7 +48,8 @@ app.onInit = function(){
         width  : ballDiameter,
         height : ballDiameter,
         color  : 'gray',
-        direction : 0
+        direction : 0,
+        ydirection: 0
     });
 
     document.onkeydown = handleKeys;
@@ -72,14 +73,15 @@ app.onUpdate = function(time){
 
     handleScoring();
 
-    handleBallCollisions();
+    handlePaddleCollisions();
 };
 
 function startGameHandler() {
-    app.getNode(ball).x = width / 2;
-    app.getNode(ball).y = height / 2;
-    app.getNode(ball).direction = Math.random() > 0.5 ? -1 : 1;
-    app.getNode(ball).x+=app.getNode(ball).direction;
+    var ballObj = app.getNode(ball);
+    ballObj.x = width / 2;
+    ballObj.y = height / 2;
+    ballObj.direction = Math.random() > 0.5 ? -1 : 1;
+    ballObj.ydirection = Math.random() > 0.5 ? -1 : 1;
 }
 
 function setupCanvas() {
@@ -91,29 +93,36 @@ function setupCanvas() {
 function p1UpHandler() {
     var player = app.getNode(p1);
     if (player.y > 0 || player.y > playerSpeed)
-        player.y-=playerSpeed;
+        player.y -= playerSpeed;
 }
 
 function p1DownHandler() {
     var player = app.getNode(p1);
     if (player.y + paddleHeight < height || player.y + paddleHeight < height - playerSpeed)
-        player.y+=playerSpeed;
+        player.y += playerSpeed;
 }
 
 function p2UpHandler() {
     var player = app.getNode(p2);
     if (player.y > 0 || player.y > playerSpeed)
-        player.y-=playerSpeed;
+        player.y -= playerSpeed;
 }
 
 function p2DownHandler() {
     var player = app.getNode(p2);
     if (player.y + paddleHeight < height || player.y + paddleHeight < height - playerSpeed)
-        player.y+=playerSpeed;
+        player.y += playerSpeed;
 }
 
 function moveBall() {
-    app.getNode(ball).x+=(app.getNode(ball).direction * ballSpeed);
+    var ballObj = app.getNode(ball);
+    ballObj.x += (ballObj.direction * ballSpeed);
+    ballObj.y += (ballObj.ydirection * ballSpeed);
+
+    // Keep it in vertical bounds
+    if (ballObj.y <= 0 || ballObj.y >= height)
+        ballObj.ydirection *= -1;
+
 }
 
 function handleScoring() {
@@ -135,13 +144,25 @@ function logScore(lastScorer) {
     console.log('P2: ' + p2Score);
 }
 
-function handleBallCollisions() {
+function handlePaddleCollisions() {
     var ballObj = app.getNode(ball);
     var p1Obj = app.getNode(p1);
     var p2Obj = app.getNode(p2);
-    if (((ballObj.x < (p1Obj.x + paddleWidth)) && (ballObj.y + ballDiameter >= p1Obj.y && ballObj.y <= p1Obj.y + paddleHeight)) || ((ballObj.x > (p2Obj.x - paddleWidth)) && (ballObj.y + ballDiameter >= p2Obj.y && ballObj.y <= p2Obj.y + paddleHeight)))
-        ballObj.direction = ballObj.direction * -1;
-    /*
-     * If ball hits paddle, do some funky magic with y direction to make it bounce according to where on the paddle
-     */
+    
+    if ((ballObj.x < (p1Obj.x + paddleWidth)) && (ballObj.y + ballDiameter >= p1Obj.y && ballObj.y <= p1Obj.y + paddleHeight)) {
+        reverseX(ballObj);
+        adjustY(ballObj, p1Obj);
+    } else if ((ballObj.x > (p2Obj.x - paddleWidth)) && (ballObj.y + ballDiameter >= p2Obj.y && ballObj.y <= p2Obj.y + paddleHeight)) {
+        reverseX(ballObj);
+        adjustY(ballObj, p2Obj);
+    }
+}
+
+function reverseX(ball) {
+    ball.direction = ball.direction * -1;
+}
+
+function adjustY(ball, paddle) {
+    const scalar = ((ball.y - paddle.y) - (paddleHeight / 2)) / 100;
+    ball.ydirection += scalar;
 }
